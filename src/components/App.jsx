@@ -2,6 +2,7 @@ import { Product } from './Product/Product';
 import Section from './Section/Section';
 import css from './App.module.css';
 import { Component } from 'react';
+import ProductForm from './ProductForm/ProductForm';
 const productsData = [
   {
     id: '3',
@@ -42,28 +43,6 @@ export class App extends Component {
     products: productsData,
   };
 
-  // handleIncrement = () => {
-  //   this.setState({ counter: this.state.counter + 1 });
-  // };
-  // /*można zrobc dwoma sposobami*/
-
-  // // this.setState(state => {
-  // //   return {
-  // //     counter: state.counter + 1;
-  // //   }
-  // // }) ✅
-
-  // // this.setState({counter: this.state.counter + 1}); ✅
-
-  // handleDecrement = () => {
-  //   if (this.state.counter === 0) {
-  //     alert('Please, stop! Counter value is already decremented.');
-  //     return;
-  //   }
-
-  //   this.setState({ counter: this.state.counter - 1 });
-  // };
-
   handleDeleteProduct = productId => {
     //[{id: "1"}, {id: "2"}, {id: "3"}]
 
@@ -82,15 +61,11 @@ export class App extends Component {
       <div>
         <Section>
           <h1>Taco Shop 🌮</h1>
-          {/* <button onClick={this.handleIncrement}>Increment</button>
-          <b>Counter: {this.state.counter}</b>
-          <button onClick={this.handleDecrement}>Decrement</button>
-
-          {this.state.counter >= 5 && (
-            <div>Congrats! You won the discount promocode 20% OFF! #RT2ER</div>
-          )} */}
+        </Section>{' '}
+        {/* w sekcji trzeba wpisac forme ktorą piszemy */}
+        <Section title="Product Form">
+          <ProductForm />
         </Section>
-
         <Section title="Product list">
           <div className={css.productList}>
             {sortedProducts.map(product => {
