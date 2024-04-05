@@ -3,6 +3,7 @@ import Section from './Section/Section';
 import css from './App.module.css';
 import { Component } from 'react';
 import ProductForm from './ProductForm/ProductForm';
+import { nanoid } from 'nanoid';
 const productsData = [
   {
     id: '3',
@@ -51,6 +52,25 @@ export class App extends Component {
     });
   };
 
+  /* Tworzymy Callback aby dodac produkt i trzeba to dodac do Formy niżej*/
+  handleAddProduct = productData => {
+const hasDuplicate = this.state.products.some(product => product.title === productData.title)
+    /* kod dla poszuku danego towaru czy jest na stronie */
+    if (hasDuplicate) {
+      alert(`Ups, product with this title ${productData.title} already exist!`);
+      return;
+    }
+    /*Kod dla dodawania nowego productu*/
+    const finalProduct = {
+      ...productData,
+      id: nanoid(),
+    };
+
+    this.setState((prevState) => ({
+      products: [...prevState.products, finalProduct]
+    }))
+  }
+
   render() {
     //Umowa do sortowania produktów aby zacząc od zniżki
     const sortedProducts = [...this.state.products].sort(
@@ -64,7 +84,7 @@ export class App extends Component {
         </Section>{' '}
         {/* w sekcji trzeba wpisac forme ktorą piszemy */}
         <Section title="Product Form">
-          <ProductForm />
+          <ProductForm handleAddProduct={this.handleAddProduct} />
         </Section>
         <Section title="Product list">
           <div className={css.productList}>

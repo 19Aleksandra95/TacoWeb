@@ -17,7 +17,8 @@ export default class ProductForm extends Component {
       discount: hasDiscount ? Number.parseFloat(discount) : null,
     };
 
-    console.log('Form Succesfully Submit', productData);
+    /* z App handleAddProduct trzeba dodac do Formy aby zapracowało */
+   this.props.handleAddProduct(productData)
   };
 
   render() {
