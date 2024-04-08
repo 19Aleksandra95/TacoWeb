@@ -38,6 +38,13 @@ export default class ProductForm extends Component {
 
     /* z App handleAddProduct trzeba dodac do Formy aby zapracowało */
     this.props.handleAddProduct(productData);
+    /* Dodawanie formy do oczyszczania formy */
+    this.setState({
+      title: '',
+      price: '',
+      hasDiscount: false,
+      discount: '',
+    })
   };
 
   render() {

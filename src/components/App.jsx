@@ -1,9 +1,10 @@
+import { Component } from 'react';
+import css from './App.module.css';
+import ProductForm from './ProductForm/ProductForm';
 import { Product } from './Product/Product';
 import Section from './Section/Section';
-import css from './App.module.css';
-import { Component } from 'react';
-import ProductForm from './ProductForm/ProductForm';
 import { nanoid } from 'nanoid';
+import Modal from './Modal/Modal';
 const productsData = [
   {
     id: '3',
@@ -42,7 +43,25 @@ export class App extends Component {
   state = {
     // counter: 0,
     products: productsData,
+    isOpenModal: false,
+    modalData: null, //Dodawanie modalData pokazuje jakie dane chcemy zobaczyc w ModalWindow
   };
+
+  /* Trzeba ze sobą zsynchronizowac produkty z state z lokalnym magazynem */
+
+  componentDidMount() {
+    const stringifieldProducts = localStorage.getItem('products');
+    const parsedProducts = JSON.parse(stringifieldProducts) ?? productsData;
+
+    this.setState({ products: parsedProducts });
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.products !== this.state.products) {
+      const stringifieldProducts = JSON.stringify(this.state.products);
+      localStorage.setItem('products', stringifieldProducts);
+    }
+  }
 
   handleDeleteProduct = productId => {
     //[{id: "1"}, {id: "2"}, {id: "3"}]
@@ -54,7 +73,9 @@ export class App extends Component {
 
   /* Tworzymy Callback aby dodac produkt i trzeba to dodac do Formy niżej*/
   handleAddProduct = productData => {
-const hasDuplicate = this.state.products.some(product => product.title === productData.title)
+    const hasDuplicate = this.state.products.some(
+      product => product.title === productData.title
+    );
     /* kod dla poszuku danego towaru czy jest na stronie */
     if (hasDuplicate) {
       alert(`Ups, product with this title ${productData.title} already exist!`);
@@ -66,10 +87,26 @@ const hasDuplicate = this.state.products.some(product => product.title === produ
       id: nanoid(),
     };
 
-    this.setState((prevState) => ({
-      products: [...prevState.products, finalProduct]
-    }))
-  }
+    this.setState(prevState => ({
+      products: [...prevState.products, finalProduct],
+    }));
+  };
+
+  /* Dwie metody na ModalWindow */
+
+  openModal = someDataModal => {
+    this.setState({
+      isOpenModal: true,
+      modalData: someDataModal,
+    });
+  };
+
+  closeModal = () => {
+    this.setState({
+      isOpenModal: false,
+      modalData: null,
+    });
+  };
 
   render() {
     //Umowa do sortowania produktów aby zacząc od zniżki
@@ -97,11 +134,19 @@ const hasDuplicate = this.state.products.some(product => product.title === produ
                   price={product.price}
                   discount={product.discount}
                   handleDeleteProduct={this.handleDeleteProduct}
+                  openModal={this.openModal}
                 />
               );
             })}
           </div>
         </Section>
+        {/* Tworzymy ModalWindow dla towarów aby zobaczyc wiecej szczegółów zamówienia */}
+        {this.state.isOpenModal && (
+          <Modal
+            closeModal={this.closeModal}
+            modalData={this.state.modalData}
+          />
+        )}
       </div>
     );
   }
