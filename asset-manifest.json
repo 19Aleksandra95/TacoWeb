@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/TacoWeb/static/css/main.efe277e4.css",
-    "main.js": "/TacoWeb/static/js/main.e4d49cf2.js",
+    "main.css": "/TacoWeb/static/css/main.c556a8b3.css",
+    "main.js": "/TacoWeb/static/js/main.4acee3ba.js",
     "index.html": "/TacoWeb/index.html",
-    "main.efe277e4.css.map": "/TacoWeb/static/css/main.efe277e4.css.map",
-    "main.e4d49cf2.js.map": "/TacoWeb/static/js/main.e4d49cf2.js.map"
+    "main.c556a8b3.css.map": "/TacoWeb/static/css/main.c556a8b3.css.map",
+    "main.4acee3ba.js.map": "/TacoWeb/static/js/main.4acee3ba.js.map"
   },
   "entrypoints": [
-    "static/css/main.efe277e4.css",
-    "static/js/main.e4d49cf2.js"
+    "static/css/main.c556a8b3.css",
+    "static/js/main.4acee3ba.js"
   ]
 }
