@@ -1,0 +1,75 @@
+import React, { Component } from 'react';
+import axios from 'axios';
+
+import { StyledAppWithRequests } from './AppWithRequest.styled';
+
+/* Praca z JSON Placeholder /get /post etc */
+
+// {
+//     "userId": 1,
+//     "id": 1,
+//     "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+//     "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+// },
+
+export default class AppWithRequest extends Component {
+  /* najpierw projektujemy state */
+  state = {
+    posts: null, // jeżeli wiesz ze bedzie to masyw można dac [] w innym wypadku to bedzie null
+    isLoading: false, //zawsze ma byc false
+    error: null,
+  };
+  /* Piszemy funkcje dla naszego zapytania sieciowego GET */
+  fetchPosts = async () => {
+    try {
+      this.setState({
+        isLoading: true,
+      });
+      /* tutaj zwracamy się do axios (tą bibliotekę wykorzystujemy w tym projekcie) */
+      const { data } = await axios.get(
+        'https://jsonplaceholder.typicode.com/posts'
+      );
+      /* trzeba teraz to wstanowic w state */
+      this.setState({
+        posts: data,
+      });
+    } 
+    catch (error) {
+
+    } 
+    finally {
+        this.setState({
+            isLoading: false,
+          });  
+    }
+  };
+
+  /* piszemy kod dla fetchPosts aby uruchomił się podczas pierwszego renderu  AppWithRequest */
+  componentDidMount() {
+    /* jeżeli nie ma w fetchPosts "return" nie trzeba pisac await */
+    this.fetchPosts();
+  }
+  render() {
+    return (
+      <StyledAppWithRequests>
+        <h1>HTTP-request</h1>
+        {/* Piszemy tą umowe jeżeli internet jest wolny aby użytkownik widział ze strona się łąduje */}
+        {this.state.isLoading && <p>Loading...</p>}
+        <ul className="postList">
+          {/* Wykorzystując map zawsze w state przy posts musi byc [], przy null nie wykorzystujemy map albo zmieniamy umowe zapytu */}
+          {this.state.posts !== null &&
+            this.state.posts.map(post => {
+              return (
+                <li key={post.id} className="postListItem">
+                  <h2 className="itemTitle">{post.title}</h2>
+                  <p className="itemBody">
+                    <b>Body:</b> {post.body}
+                  </p>
+                </li>
+              );
+            })}
+        </ul>
+      </StyledAppWithRequests>
+    );
+  }
+}
