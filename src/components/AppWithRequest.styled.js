@@ -18,6 +18,7 @@ export const StyledAppWithRequests = styled.div`
     padding: 20px;
     border: 2px solid black;
     margin-bottom: 25px;
+    cursor: pointer;
 }
 .itemTitle {
     margin-top: 0;
@@ -27,4 +28,44 @@ export const StyledAppWithRequests = styled.div`
 .itemBody {
     margin-top: 0;
     margin-bottom: 0;
-}`
+}
+.error-bage {
+    padding: 25px;
+    border: 1px solid red;
+    background-color: red;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.listWrapper {
+    display: flex;
+    gap:20px;
+
+}
+
+.commentsList{
+    list-style: none;
+    padding: 0;
+    position: relative;
+}
+.commentsListItem {
+    position: sticky;
+    top: 20px;
+    padding: 20px;
+    border: 2px solid green;
+    margin-bottom: 25px;
+}
+.commentName{
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+.commentEmail{
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+.commentBody{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+`
