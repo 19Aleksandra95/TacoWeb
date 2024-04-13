@@ -47,10 +47,15 @@ export const StyledAppWithRequests = styled.div`
     list-style: none;
     padding: 0;
     position: relative;
-}
-.commentsListItem {
     position: sticky;
     top: 20px;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: overlay; //dla scroll
+}
+.commentsListItem {
+ 
     padding: 20px;
     border: 2px solid green;
     margin-bottom: 25px;
