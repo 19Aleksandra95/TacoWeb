@@ -88,6 +88,14 @@ export default class AppWithRequest extends Component {
     /* jeżeli nie ma w fetchPosts "return" nie trzeba pisac await */
     this.fetchPosts();
   }
+
+  /*Umowa dla wyskakujacych komentarzy po kliknięciu danego materiału */
+  componentDidUpdate(_, prevState) {
+    if (prevState.selectedPostId !== this.state.selectedPostId) {
+      this.fetchPostsComments();
+    }
+  }
+
   render() {
     return (
       <StyledAppWithRequests>
@@ -118,20 +126,27 @@ export default class AppWithRequest extends Component {
                 );
               })}
           </ul>
-          {/* /* Tworzymy kod dla komentarzy */}
+          {/* Tworzymy kod dla komentarzy */}
           <ul className="commentsList">
-            <li className="commentsListItem">Selected post id: {this.state.selectedPostId}</li>
-            <li className="commentsListItem">
-              <h2 className="commentName">
-                Name: id labore ex et quam laborum
-              </h2>
-              <h3 className="commentEmail">Email: Eliseo@gardner.biz</h3>
-              <p className="commentBody">
-                <b>Body:</b> laudantium enim quasi est quidem magnam voluptate
-                ipsam eos\ntempora quo necessitatibus\ndolor quam autem
-                quasi\nreiciendis et nam sapiente accusantium
-              </p>
-            </li>
+            {this.state.selectedPostId !== null && (
+              <li className="commentsListItem">
+                Selected post id: {this.state.selectedPostId}
+              </li>
+            )}
+            {/* !this.state.is Loading && - umowa do tego aby komentarze ładowały się */}
+            {!this.state.isLoading &&
+              this.state.comments !== null &&
+              this.state.comments.map(comments => {
+                return (
+                  <li key={comments.id} className="commentsListItem">
+                    <h2 className="commentName">Name: {comments.name}</h2>
+                    <h3 className="commentEmail">Email: {comments.email}</h3>
+                    <p className="commentBody">
+                      <b>Body:</b> {comments.body}
+                    </p>
+                  </li>
+                );
+              })}
           </ul>
         </div>
       </StyledAppWithRequests>
