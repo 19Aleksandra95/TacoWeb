@@ -1,66 +1,98 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyledModal } from './Modal.styled';
 
-export default class Modal extends Component {
-  state = {
-    counter: 1,
-  };
+//Przepisujemy całosc z class na funckję
+
+const Modal = ({ modalData, closeModal }) => {
+  // state = {
+  //   counter: 1,
+  // };
+
+  const [counter, setCounter] = useState(1);
 
   /* componentDidMount to funkcja jaka react wykorzysta gdy bedzie tego potrzebowac */
 
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
-    /* kod dla którego scroll działa ale gdy się modalka załączy przestaje */
+  // WYKORZYSTANIE USEEFFECT
+
+  useEffect(() => {
+    console.log('ADDEVENTLISTENER USE EFFECT');
+    //to przerobienie kodu componentDidMount na useEffect
+    const handleKeyDown = event => {
+      if (event.code === 'Escape') {
+        closeModal();
+      }
+    };
+    //  componentDidMount
+    window.addEventListener('keydown', handleKeyDown);
     document.body.style.overflow = 'hidden';
-  }
+
+    return () => {
+      // componentWillUnmount() {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'auto';
+    };
+  }, [closeModal]);
+
+  //Spróbujemy emulowaty componentDidMount + componentDidUpdate
+  useEffect(() => {
+    console.log('Product counter value: ' + counter);
+  }, [counter]);
+
+  // componentDidMount() {
+  //   window.addEventListener('keydown', this.handleKeyDown);
+  //   /* kod dla którego scroll działa ale gdy się modalka załączy przestaje */
+  //   document.body.style.overflow = 'hidden';
+  // }
 
   // componentDidUpdate(prevprops, prevState) {
   //   console.log('Modal was update (PROPS) or STATE changed');
 
   // }
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
-       /* kod dla którego scroll działa ale gdy się modalka załączy przestaje */
-       document.body.style.overflow = 'auto';
-  }
+  // componentWillUnmount() {
+  //   window.removeEventListener('keydown', this.handleKeyDown);
+  //      /* kod dla którego scroll działa ale gdy się modalka załączy przestaje */
+  //      document.body.style.overflow = 'auto';
 
-  handleIcrementProduct = () => {
-    this.setState(prevState => ({ counter: prevState.counter + 1 }));
+  const handleIcrementProduct = () => {
+    // this.setState(prevState => ({ counter: prevState.counter + 1 }));
+    //Trzeba zwrócic się do funkcji jaka będzie zmieniac stan są 2 sposoby
+    setCounter(prevState => prevState + 1); //Callback funckja
+    // 2) setCounter(counter + 1);
   };
 
-  handleOverlayClick = event => {
+  const handleOverlayClick = event => {
     if (event.target === event.currentTarget) {
-      this.props.closeModal();
+      closeModal();
     }
   };
 
   /* Kod dla zamknięcia modalnego okna na Escape, aby działał trzeba go dopisac do componentDidMount */
 
-  handleKeyDown = event => {
-    if (event.code === 'Escape') {
-      this.props.closeModal();
-    }
-  };
+  // const handleKeyDown = event => {
+  //     if (event.code === 'Escape') {
+  //       closeModal();
+  //     }
+  //   };
 
-  render() {
-    return (
-      <StyledModal onClick={this.handleOverlayClick}>
-        <div className="modal">
-          <button onClick={this.props.closeModal} className="closeBtn">
-            &times;
+  return (
+    <StyledModal onClick={handleOverlayClick}>
+      <div className="modal">
+        <button onClick={closeModal} className="closeBtn">
+          &times;
+        </button>
+        <h2>Product Details</h2>
+        <div>
+          <h3>Title:{modalData.title}</h3>
+          <p>Price:{modalData.price}$</p>
+          <p>Discount:{modalData.discount}$</p>
+          <button onClick={handleIcrementProduct}>
+            Add product: {counter}
           </button>
-          <h2>Product Details</h2>
-          <div>
-            <h3>Title:{this.props.modalData.title}</h3>
-            <p>Price:{this.props.modalData.price}$</p>
-            <p>Discount:{this.props.modalData.discount}$</p>
-            <button onClick={this.handleIcrementProduct}>
-              Add product: {this.state.counter}
-            </button>
-          </div>
         </div>
-      </StyledModal>
-    );
-  }
-}
+      </div>
+    </StyledModal>
+  );
+};
+
+export default Modal;
