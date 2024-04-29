@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import css from './App.module.css';
 import ProductForm from './ProductForm/ProductForm';
 import { Product } from './Product/Product';
@@ -38,42 +38,46 @@ const productsData = [
   },
 ];
 
-export class App extends Component {
+export const App = () => {
   /*-- state to zawsze objekt --*/
-  state = {
-    // counter: 0,
-    products: productsData,
-    isOpenModal: false,
-    modalData: null, //Dodawanie modalData pokazuje jakie dane chcemy zobaczyc w ModalWindow
-  };
+  // state = {
+  //   // counter: 0,
+  //   products: productsData,
+  //   isOpenModal: false,
+  //   modalData: null, //Dodawanie modalData pokazuje jakie dane chcemy zobaczyc w ModalWindow
+  // };
+  const [products, setProducts] = useState(productsData);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [modalData, setModalData] = useState(null);
 
   /* Trzeba ze sobą zsynchronizowac produkty z state z lokalnym magazynem */
 
-  componentDidMount() {
-    const stringifieldProducts = localStorage.getItem('products');
-    const parsedProducts = JSON.parse(stringifieldProducts) ?? productsData;
+  // componentDidMount() {
+  //   const stringifieldProducts = localStorage.getItem('products');
+  //   const parsedProducts = JSON.parse(stringifieldProducts) ?? productsData;
 
-    this.setState({ products: parsedProducts });
-  }
+  //   this.setState({ products: parsedProducts });
+  // }
 
-  componentDidUpdate(_, prevState) {
-    if (prevState.products !== this.state.products) {
-      const stringifieldProducts = JSON.stringify(this.state.products);
-      localStorage.setItem('products', stringifieldProducts);
-    }
-  }
+  // componentDidUpdate(_, prevState) {
+  //   if (prevState.products !== this.state.products) {
+  //     const stringifieldProducts = JSON.stringify(this.state.products);
+  //     localStorage.setItem('products', stringifieldProducts);
+  //   }
+  // }
 
-  handleDeleteProduct = productId => {
+  const handleDeleteProduct = productId => {
     //[{id: "1"}, {id: "2"}, {id: "3"}]
 
-    this.setState({
-      products: this.state.products.filter(product => product.id !== productId),
-    });
+    setProducts(products.filter(product => product.id !== productId));
+    //   this.setState({
+    //     products: this.state.products.filter(product => product.id !== productId),
+    //   });
   };
 
   /* Tworzymy Callback aby dodac produkt i trzeba to dodac do Formy niżej*/
-  handleAddProduct = productData => {
-    const hasDuplicate = this.state.products.some(
+  const handleAddProduct = productData => {
+    const hasDuplicate = products.some(
       product => product.title === productData.title
     );
     /* kod dla poszuku danego towaru czy jest na stronie */
@@ -87,67 +91,64 @@ export class App extends Component {
       id: nanoid(),
     };
 
-    this.setState(prevState => ({
-      products: [...prevState.products, finalProduct],
-    }));
+    setProducts(prevState => [...prevState, finalProduct]);
+    // this.setState(prevState => ({
+    //   products: [...prevState.products, finalProduct],
+    // }));
   };
 
   /* Dwie metody na ModalWindow */
 
-  openModal = someDataModal => {
-    this.setState({
-      isOpenModal: true,
-      modalData: someDataModal,
-    });
+  const openModal = someDataModal => {
+    setIsOpenModal(true);
+    setModalData(someDataModal);
+
+    // this.setState({
+    //   isOpenModal: true,
+    //   modalData: someDataModal,
+    // });
   };
 
-  closeModal = () => {
-    this.setState({
-      isOpenModal: false,
-      modalData: null,
-    });
+  const closeModal = () => {
+    setIsOpenModal(false);
+    setModalData(null);
+    // this.setState({
+    //   isOpenModal: false,
+    //   modalData: null,
+    // });
   };
 
-  render() {
-    //Umowa do sortowania produktów aby zacząc od zniżki
-    const sortedProducts = [...this.state.products].sort(
-      (a, b) => b.discount - a.discount
-    );
+  //Umowa do sortowania produktów aby zacząc od zniżki
+  const sortedProducts = [...products].sort((a, b) => b.discount - a.discount);
 
-    return (
-      <div>
-        <Section>
-          <h1>Taco Shop 🌮</h1>
-        </Section>{' '}
-        {/* w sekcji trzeba wpisac forme ktorą piszemy */}
-        <Section title="Product Form">
-          <ProductForm handleAddProduct={this.handleAddProduct} />
-        </Section>
-        <Section title="Product list">
-          <div className={css.productList}>
-            {sortedProducts.map(product => {
-              return (
-                <Product
-                  key={product.id}
-                  id={product.id}
-                  title={product.title}
-                  price={product.price}
-                  discount={product.discount}
-                  handleDeleteProduct={this.handleDeleteProduct}
-                  openModal={this.openModal}
-                />
-              );
-            })}
-          </div>
-        </Section>
-        {/* Tworzymy ModalWindow dla towarów aby zobaczyc wiecej szczegółów zamówienia */}
-        {this.state.isOpenModal && (
-          <Modal
-            closeModal={this.closeModal}
-            modalData={this.state.modalData}
-          />
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Section>
+        <h1>Taco Shop 🌮</h1>
+      </Section>{' '}
+      {/* w sekcji trzeba wpisac forme ktorą piszemy */}
+      <Section title="Product Form">
+        <ProductForm handleAddProduct={handleAddProduct} />
+      </Section>
+      <Section title="Product list">
+        <div className={css.productList}>
+          {sortedProducts.map(product => {
+            return (
+              <Product
+                key={product.id}
+                id={product.id}
+                title={product.title}
+                price={product.price}
+                discount={product.discount}
+                handleDeleteProduct={handleDeleteProduct}
+                openModal={openModal}
+              />
+            );
+          })}
+        </div>
+      </Section>
+      {/* Tworzymy ModalWindow dla towarów aby zobaczyc wiecej szczegółów zamówienia */}
+      {isOpenModal && <Modal closeModal={closeModal} modalData={modalData} />}
+    </div>
+  );
+};
