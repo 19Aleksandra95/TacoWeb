@@ -194,8 +194,8 @@ const ProductForm = ({ handleAddProduct }) => {
     /* Tu w formie wynosimy dane z App.js z const ProductData które chcemy uwidocznic na stronie */
     /* handleSubmit dodajemy w formę dlatego że dzięi temu możemy zapisac coś nie naciskając button a wciskając już enter */
     <form onSubmit={handleSubmit} className={`${css.form} ${css.formLarge}`}>
-      {title === 'Spagetti' && (
-        <h2>Congrats! You won a promocode😒😭 - #R3E2A1🎉</h2>
+      {title === 'Spaghetti' && (
+        <h2>Congrats! You won a promocode!! - #R3E2A1🎉</h2>
       )}
       <label className={css.formLabel}>
         <p className={css.labelText}>Title:</p>

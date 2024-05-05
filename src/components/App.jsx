@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import css from './App.module.css';
 import ProductForm from './ProductForm/ProductForm';
 import { Product } from './Product/Product';
@@ -46,9 +46,26 @@ export const App = () => {
   //   isOpenModal: false,
   //   modalData: null, //Dodawanie modalData pokazuje jakie dane chcemy zobaczyc w ModalWindow
   // };
-  const [products, setProducts] = useState(productsData);
+  // const [products, setProducts] = useState(productsData);
+  // const [isOpenModal, setIsOpenModal] = useState(false);
+  // const [modalData, setModalData] = useState(null);
+
+  /*Metoda jak można jeszcze pracowac z hookami */
+  const [products, setProducts] = useState(() => {
+    //callback funckja i wewnątrz wpisac componentDidMount
+    const stringifieldProducts = localStorage.getItem('products');
+    const parsedProducts = JSON.parse(stringifieldProducts) ?? productsData;
+
+    return parsedProducts;
+  });
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalData, setModalData] = useState(null);
+
+  //kod dla componentDidUpdate
+  useEffect(() => {
+    const stringifieldProducts = JSON.stringify(products);
+    localStorage.setItem('products', stringifieldProducts);
+  }, [products]);
 
   /* Trzeba ze sobą zsynchronizowac produkty z state z lokalnym magazynem */
 
